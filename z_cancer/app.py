@@ -108,6 +108,7 @@ def predict():
             ]
             
             return redirect(url_for('prediction_result', result=result, cancer_stage=cancer_stage))
+
         else:
             result = 'Benign'
             return redirect(url_for('prediction_result', result=result))
@@ -135,7 +136,6 @@ def get_cancer_stage(risk_score):
         return 'Stage 3C'
     else:
         return 'Stage 4'
-
 @app.route('/prediction_result')
 def prediction_result():
     result = request.args.get('result')
@@ -145,6 +145,7 @@ def prediction_result():
         return render_template('prediction_result.html', result=result, cancer_stage=cancer_stage, map_file=map_file_path)
     else:
         return render_template('prediction_result.html', result=result)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
