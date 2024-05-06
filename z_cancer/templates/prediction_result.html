@@ -91,13 +91,14 @@
 </head>
 
 <body>
-    <div class="prediction-container" id="result">
+   <div class="prediction-container" id="result">
         <div class="prediction-result">
             {% if result %}
             <h2 class="prediction-heading">{{ result }}</h2>
             {% if cancer_stage %}
             <div>
-                {% if cancer_stage == 'Stage 0' %}
+                <p class="stage-text-bold">Stage: {{ cancer_stage }}</p>
+                {% if cancer_stage == 'Stage 0 (Carcinoma in situ)' %}
                 <p class="stage-text">There are cancer cells only in the lining of a breast duct. This is called ductal carcinoma in situ (DCIS).</p>
                 <p class="stage-text">Or there is Paget disease of the breast without any invasive carcinoma or DCIS.</p>
                 {% elif cancer_stage == 'Stage 1A' %}
