@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Result</title>
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.7.1/dist/leaflet.css" />
+
+    <style>
+        .prediction-container {
+            margin: 20px;
+        }
+
+        .prediction-result {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        .prediction-heading {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .stage-text {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .stage-text-bold {
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        #map {
+            height: 400px; /* Adjust the height of the map as needed */
+            margin-top: 20px;
+        }
+    
+
+
+    
+
+
+
+      .prediction-container {
+        margin: 20px;
+    }
+    
+    .prediction-result {
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        padding: 20px;
+        border-radius: 5px;
+    }
+    
+    .prediction-heading {
+        font-size: 24px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 10px;
+    }
+    
+    .stage-text {
+        font-size: 16px;
+        color: #666;
+        margin-bottom: 10px;
+    }
+    
+    .stage-text-bold {
+        font-size: 18px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 10px;
+    }
+    
+
+    </style>
+
+
+</head>
+
+<body>
+    <div class="prediction-container" id="result">
+        <div class="prediction-result">
+            {% if result %}
+            <h2 class="prediction-heading">{{ result }}</h2>
+            {% if cancer_stage %}
+            <div>
+                {% if cancer_stage == 'Stage 0' %}
+                <p class="stage-text">There are cancer cells only in the lining of a breast duct. This is called ductal carcinoma in situ (DCIS).</p>
+                <p class="stage-text">Or there is Paget disease of the breast without any invasive carcinoma or DCIS.</p>
+                {% elif cancer_stage == 'Stage 1A' %}
+                <p class="stage-text">The tumour is 20 mm or smaller and has not spread to any lymph nodes.</p>
+                {% elif cancer_stage == 'Stage 1B' %}
+                <p class="stage-text">The tumour is 20 mm or smaller, or no tumour can be seen in the breast. A small number of cancer cells are found in the lymph nodes (called micrometastases). The group of cancer cells in the lymph nodes are no larger than 2 mm in size.</p>
+                {% elif cancer_stage == 'Stage 2A' %}
+                <p class="stage-text">The tumour is 20 mm or smaller, or no tumour can be seen in the breast. Cancer cells are found in 1 to 3 lymph nodes under the arm (called axillary lymph nodes) or in lymph nodes inside the chest around the breastbone (called internal mammary nodes) or in both areas.</p>
+                <p class="stage-text">Or the tumour is larger than 20 mm but not more than 50 mm and has not spread to any lymph nodes.</p>
+                {% elif cancer_stage == 'Stage 2B' %}
+                <p class="stage-text">The tumour is larger than 20 mm but not more than 50 mm. The cancer has also spread to 1 to 3 axillary lymph nodes or to internal mammary lymph nodes or to both areas.</p>
+                <p class="stage-text">Or the tumour is larger than 50 mm and has not spread to any lymph nodes.</p>
+                {% elif cancer_stage == 'Stage 3A' %}
+                <p class="stage-text">The tumour is of any size, or no tumour can be seen in the breast. Cancer cells are found in 4 to 9 axillary lymph nodes, or in internal mammary lymph nodes but has not spread to other parts of the body.</p>
+                <p class="stage-text">Or the tumour is larger than 50 mm and has spread to 1 to 3 axillary lymph nodes or to internal mammary lymph nodes. But it has not spread to other parts of the body.</p>
+                {% elif cancer_stage == 'Stage 3B' %}
+                <p class="stage-text">The tumour has grown into the muscles of the chest wall or the skin (causing an open wound, or ulcer) or both. The cancer may have also spread to 1 to 9 axillary lymph nodes or to internal mammary lymph nodes. The cancer has not spread to other parts of the body.</p>
+                <p class="stage-text">Or it is inflammatory breast cancer.</p>
+                {% elif cancer_stage == 'Stage 3C' %}
+                <p class="stage-text">The tumour is of any size and any of the following apply:</p>
+                <ul>
+                    <li>The cancer has spread to 10 or more axillary lymph nodes or to lymph nodes below the collarbone (called infraclavicular lymph nodes).</li>
+                    <li>The cancer has spread to internal mammary lymph nodes and axillary lymph nodes.</li>
+                    <li>The cancer has spread to lymph nodes above the collarbone (called supraclavicular lymph nodes).</li>
+                    <li>The cancer has not spread to other parts of the body.</li>
+                </ul>
+                {% elif cancer_stage == 'Stage 4' %}
+                <p class="stage-text-bold">The cancer has spread to other parts of the body (called distant metastasis), such as to the bone, liver, lungs, or brain. This is also called metastatic breast cancer.</p>
+                {% endif %}
+            </div>
+            {% endif %}
+            {% endif %}
+        </div>
+    </div>
+
+
+
+
+
+
+    <div id="map"></div>
+<div id="nearby-hospitals">
+    <h3>Nearby Hospitals</h3>
+    <ul id="hospital-list"></ul>
+</div>
+
+
+
+<div class="prediction-container">
+    <label for="city-dropdown">Select a City:</label>
+    <select id="city-dropdown" onchange="showHospitals(this.value)">
+        <option >SELECT</option>
+        <option value="Madurai">MADURAI</option>
+        <option value="Chennai">Chennai</option>    
+        <option value="Coimbatore">Coimbatore</option>
+        <option value="Tirunelveli">Tirunelveli</option>
+        <option value="Salem">Salem</option>
+        <option value="Erode">Erode</option>
+        <option value="Dindigul">Dindigul</option>
+        <option value="Trichy">Trichy</option>
+        <option value="Nagercoil">Nagercoil</option>
+        <option value="Namakkal">Namakkal</option>
+        <option value="Vellore">Vellore</option>
+        <option value="Bangalore">Bangalore</option>
+
+
+
+        <!-- Add more options for other cities as needed -->
+    </select>
+   
+</div>
+
+<div id="map"></div>
+
+    <div id="nearby-hospitals">
+        <h3>Nearby Hospitals</h3>
+        <!-- Display the list of hospitals here if needed -->
+    </div>
+
+    
+        <script>
+            function showHospitals() {
+                var city = document.getElementById("city-dropdown").value;
+        
+                // Define the cancer treatment hospitals for each city
+                var hospitals = {};
+                
+               
+                hospitals['Madurai'] = [
+                {"name": "Rajaji Government Hospitals", "lat": 9.91615, "lng": 78.13068},
+                {"name": "Madurai Cancer Center", "lat": 9.92709, "lng": 78.11264},
+                {"name": "Meenakshi Mission Hospital", "lat": 9.95350, "lng": 78.16306},
+                {"name": "Cross Cancer", "lat": 9.93209, "lng": 78.14864},
+                {"name": "APOLLO Speciality Hospitals", "lat": 9.93209, "lng": 78.14967},
+                // Add more hospitals for Madurai
+            ];
+
+
+                hospitals['Chennai'] = [
+                    {"name": "Apollo Hospital", "lat": 13.061262449463461, "lng": 80.25453090094358},
+                    {"name": "Fortis Malar Hospital", "lat": 13.010287405937166, "lng":  80.18592},
+                    {"name": "MIOT International Hospital", "lat": 13.02239, "lng":  80.25860470274978},
+                    {"name": "Gleneagles Health City Hospital", "lat": 12.89805, "lng":  80.20613},
+                    {"name": "Billroth Hospitals", "lat": 13.07608, "lng":  80.22734}
+                    // Add more hospitals for Chennai
+                ];
+        
+                
+
+                hospitals['Coimbatore']=[
+                    {"name": "Ganga Breast Care Centre","lat":11.046526151070347,"lng": 76.94748059053167},
+                    {"name": "American Oncology Institute (Cancer Hospital)","lat":11.076177275669714, "lng": 77.08892955849011},
+                    {"name": "Dr P Manivannan medical oncologist/cancer specialist","lat":11.038438960444966, "lng":76.95160046338484},
+                    {"name": "KG Hospital","lat":11.00083080418529, "lng":76.97145914358717}
+                    //Add more hospitals for Coimbatore
+
+                ];
+
+                hospitals['Tirunelveli']=[
+                    {"name": "Shifa Hospitals","lat":8.729605403052377, "lng": 77.71022631451892},
+                    {"name": "Annai Velankanni Multispeciality Hospital","lat":8.727518177996128, "lng": 77.73029204430543}
+                ];
+
+                hospitals['Salem']=[
+                    {"name": "Dr. Thiru Neuro & Multispeciality Hospital","lat":11.66277358276269,  "lng": 78.2036057991546},
+                    {"name": "S P M M Hospital","lat":11.661495262076214,"lng": 78.19215709753885},
+                    {"name": "Deepam Speciality Hospital","lat":11.627225753359461, "lng": 78.14765716785244}
+                    ];
+
+                hospitals['Erode']=[
+                    {"name": "Erode Cancer Centre","lat":11.314214379688108, "lng": 77.66866851526882},
+                    {"name": "Care 24 Medical Centre And Hospital","lat":11.326723666018433, "lng": 77.68815100182704},
+                    {"name": "Sudha Cancer Centre","lat":11.339469808925454, "lng": 77.71060816894833}
+                ];
+
+                hospitals['Dindigul']=[
+                    {"name": "Dharshini Hospitals","lat":10.369450269228487, "lng": 77.97670400179244}
+                ];
+
+                hospitals['Trichy']=[
+                    {"name": "Silverline Speciality Hospital","lat":10.82495705981534, "lng": 78.68191979105109},
+                    {"name": "Dr G Viswanathan - CBCC cancer center","lat":10.854306183909827,"lng": 78.69767755814395}
+                ];
+
+                hospitals['Nagercoil']=[
+                    {"name": "Muthu Neuro & Trauma Centre","lat":8.197746599024681,"lng":  77.38772552578038},
+                    {"name": "Siva Hospitals","lat":10.852957459144188, "lng": 78.69596094445514 }
+                ];
+
+                hospitals['Namakkal']=[
+                    {"name": "Thangam Hospital","lat":11.215612293093322,"lng":  78.17210515101631,},
+                    {"name": "Sarvam Multi System Of Medicine and Research Institute Pvt Ltd","lat":11.241817630447537, "lng":  78.17210515101631}
+                ];
+
+                hospitals['Vellore']=[
+                    {"name": "Sri Narayani Hospital and Research Centre","lat":12.870774704836, "lng":  79.08993488909442},
+                    {"name": "Nalam Medical Centre and Hospital","lat":12.935267352497144, "lng": 79.15374655748693}
+                ];
+
+                hospitals['Bangalore']=[
+                    {"name": "Fortis Hospital Richmond Road","lat":12.980093019450257,  "lng":  77.61120678099982},
+                    {"name": "Cytecare Hospitals Bangalore","lat":13.11866973853396,  "lng": 77.60823194897264},
+                    {"name": "Sri Shankara Cancer Foundation","lat":12.95430507042922,  "lng": 77.5711659383228},
+                    {"name": "HCG Cancer Hospital - (K. R. Road, Bengaluru)","lat":12.96453572401942,   "lng": 77.58958136405364},
+                    {"name": "OncoVille Cancer Hospital & Research Centre","lat":12.97643205249809, "lng":77.50963115181774 },
+                    {"name": "Healius Cancer & Hematology - Cancer Hospitals","lat":12.929307978652597, "lng":77.57335695106764}
+                ];
+                
+                    
+
+
+                    
+
+                
+                    
+        
+
+                    
+                var selectedHospitals = hospitals[city];
+                if (selectedHospitals) {
+                    var map = L.map('map').setView([selectedHospitals[0].lat, selectedHospitals[0].lng], 12);
+        
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                    }).addTo(map);
+        
+                    // Remove existing markers from the map
+                    map.eachLayer(function (layer) {
+                        if (layer instanceof L.Marker) {
+                            map.removeLayer(layer);
+                        }
+                    });
+        
+                    // Add markers for hospitals
+                    selectedHospitals.forEach(function(hospital) {
+                        L.marker([hospital.lat, hospital.lng]).addTo(map)
+                            .bindPopup(hospital.name);
+                    });
+                }
+            }
+        
+        
+    </script>
+</body>
+
+</html>
